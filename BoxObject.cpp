@@ -1,0 +1,46 @@
+#include "BoxObject.h"
+
+sf::RectangleShape BoxObject::get_box_object(){
+    return box_object;
+}
+
+void BoxObject::set_position(sf::Vector2f pos){
+    position = pos;
+    box_object.setPosition(position);
+}
+
+void BoxObject::calculate_sides(){
+    sides.left = position.x;
+    sides.right = sides.left + box_object.getSize().x;
+    sides.up = position.y;
+    sides.down = sides.up + box_object.getSize().y;
+}
+
+void BoxObject::set_outline(){
+    box_object.setOutlineColor(sf::Color::Green);
+    box_object.setOutlineThickness(4);
+}
+
+void BoxObject::set_global_bounds(){
+    global_bounds = box_object.getGlobalBounds();
+}
+
+void BoxObject::set_was_hit(bool hit){
+    was_hit = hit;
+}
+
+bool BoxObject::get_was_hit(){
+    return was_hit;
+}
+
+sf::Vector2f BoxObject::get_position(){
+    return position;
+}
+
+sf::FloatRect BoxObject::get_gloabal_bounds(){
+    return global_bounds;
+}
+
+box_sides BoxObject::get_sides(){
+    return sides;
+}
