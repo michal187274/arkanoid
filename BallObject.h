@@ -1,5 +1,7 @@
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
+
 struct intersection_points{
     float left;
     float right;

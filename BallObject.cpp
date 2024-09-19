@@ -5,6 +5,7 @@
     }
 
     void BallObject::set_position(sf::Vector2f position){
+        std::cout<<"i'm in BallObject::set_position "<<position.x<<" "<<position.y<<'\n';
         m_position = position;
         m_ball_object.setPosition(position);
     }
