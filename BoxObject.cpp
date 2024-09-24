@@ -37,7 +37,7 @@ sf::Vector2f BoxObject::get_position(){
     return position;
 }
 
-sf::FloatRect BoxObject::get_gloabal_bounds(){
+sf::FloatRect BoxObject::get_global_bounds(){
     return global_bounds;
 }
 

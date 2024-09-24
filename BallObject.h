@@ -18,17 +18,20 @@ class BallObject{
     sf::Vector2f m_position;
 
 public:
-    void move();
+    BallObject() {};
+    void move(sf::Vector2f);
     void set_position(sf::Vector2f position);
     void calculate_intersection_points();
     void set_outline();
     void set_radius(float);
-    void set_move_step(sf::Vector2f);
-
+    void update_position();
+    
+    sf::Vector2f get_move_step();
     sf::Vector2f get_position();
-    sf::FloatRect get_gloabal_bounds();
+    sf::FloatRect get_global_bounds();
     intersection_points get_intersection_points();
-    sf::CircleShape get_ball_object();
+    sf::CircleShape get_ball();
+    float get_radius() {return m_radius;};
 
 
 };

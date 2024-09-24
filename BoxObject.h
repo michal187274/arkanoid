@@ -28,7 +28,7 @@ public:
 
     bool get_was_hit();
     sf::Vector2f get_position();
-    sf::FloatRect get_gloabal_bounds();
+    sf::FloatRect get_global_bounds();
     box_sides get_sides();
     sf::RectangleShape get_box_object();
 

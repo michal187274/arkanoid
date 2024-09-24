@@ -1,7 +1,7 @@
 #include "BallObject.h"
 
-    void BallObject::move(){
-        m_ball_object.move(m_move_step);
+    void BallObject::move(sf::Vector2f step){
+        m_ball_object.move(step);
     }
 
     void BallObject::set_position(sf::Vector2f position){
@@ -10,8 +10,8 @@
         m_ball_object.setPosition(position);
     }
 
-    void BallObject::set_move_step(sf::Vector2f step){
-        m_move_step = step;
+    void BallObject::update_position(){
+        m_position = m_ball_object.getPosition();
     }
 
     void BallObject::set_radius(float radius){
@@ -30,7 +30,7 @@
         return m_position;
     }
 
-    sf::FloatRect BallObject::get_gloabal_bounds(){
+    sf::FloatRect BallObject::get_global_bounds(){
         return m_ball_object.getGlobalBounds();
     }
 
@@ -38,6 +38,10 @@
         return m_points;
     }
 
-    sf::CircleShape BallObject::get_ball_object(){
+    sf::CircleShape BallObject::get_ball(){
         return m_ball_object;
+    }
+
+    sf::Vector2f BallObject::get_move_step(){
+        return m_move_step;
     }

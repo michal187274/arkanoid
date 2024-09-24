@@ -11,5 +11,5 @@ BoxObject.o : BoxObject.cpp BoxObject.h
 BallObject.o : BallObject.cpp BallObject.h
 	g++ -c BallObject.cpp
 
-GameState.o : GameState.cpp GameState.h
+GameState.o : GameState.cpp GameState.h BoardObject.h
 	g++ -c GameState.cpp
