@@ -37,7 +37,7 @@ int main()
 
     return 0;
 }
-
+/*to GameState
 bool circle_box_collision(BoxObject box){
     float circle_x_intersection_point_right(0);
     float circle_x_intersection_point_left(0);
@@ -83,4 +83,4 @@ bool circle_box_collision(BoxObject box){
     }
     else if(!game.get_ball_object().get_global_bounds().intersects(box.get_global_bounds()))  intersects = false;
     return intersects;
-};
+};*/
