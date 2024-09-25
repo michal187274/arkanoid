@@ -4,6 +4,10 @@
 #include "BallObject.h"
 #include "BoardObject.h"
 
+const sf::Vector2f ball_initial_position(400,501);
+const sf::Vector2f board_initial_position(400,500);
+sf::Vector2f initial_ball_move_step(-60,-80);
+sf::Vector2f intial_board_move_step(-60,0);
 class GameState{
     sf::Vector2f window_size;
     sf::Vector2f box_size;
@@ -13,18 +17,13 @@ class GameState{
     BoardObject m_board;
     sf::RenderWindow& window;
     float m_delta_time;
-    sf::Vector2f m_ball_move_step;
-    sf::Vector2f m_board_move_step;
-    sf::Vector2f m_ball_position;
-    sf::Vector2f m_board_position;
+    sf::Vector2f m_ball_move_step = initial_ball_move_step;
+    sf::Vector2f m_board_move_step = intial_board_move_step;
+    intersection_points m_ball_intersection_points;
+
 
 public:
-    GameState(sf::RenderWindow& w, sf::Vector2f ball_position, sf::Vector2f board_position, sf::Vector2f ball_move_step, sf::Vector2f board_move_step) :
-                                     window(w), 
-                                     m_ball_move_step(ball_move_step),
-                                     m_board_move_step(board_move_step),
-                                     m_ball_position(ball_position),
-                                     m_board_position(board_position) {};
+    GameState(sf::RenderWindow& w) : window(w){};
     void create_boxes(int, sf::Vector2f);
     void create_ball(float);
     void create_board(sf::Vector2f);
@@ -40,8 +39,9 @@ public:
     void move_board(sf::Vector2f);
 
     void ball_wall_collision();
-    void circle_board_collision();
+    void ball_board_collision();
     void handle_event(sf::Event ev);
+    void ball_box_collision();
 
     void draw();
 };

@@ -3,6 +3,12 @@
 #include <iostream>
 
 struct intersection_points{
+    intersection_points() {};
+    intersection_points(float a_left, float a_right, float a_up, float a_down) : 
+                        left(a_down),
+                        right(a_right),
+                        up(a_up),
+                        down(a_down) {};
     float left;
     float right;
     float up;
@@ -29,9 +35,9 @@ public:
     sf::Vector2f get_move_step();
     sf::Vector2f get_position();
     sf::FloatRect get_global_bounds();
-    intersection_points get_intersection_points();
     sf::CircleShape get_ball();
     float get_radius() {return m_radius;};
+    intersection_points get_intersection_points();
 
 
 };

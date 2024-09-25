@@ -19,11 +19,12 @@
         m_ball_object.setRadius(radius);
     }
 
-    void BallObject::calculate_intersection_points(){
-        m_points.right = m_position.x + m_radius;
-        m_points.left = m_position.x - m_radius;
-        m_points.up = m_position.y - m_radius;
-        m_points.down = m_position.y + m_radius;
+    intersection_points BallObject::get_intersection_points(){
+        return intersection_points(
+        m_points.right = m_position.x + m_radius,
+        m_points.left = m_position.x - m_radius,
+        m_points.up = m_position.y - m_radius,
+        m_points.down = m_position.y + m_radius);
     }
 
     sf::Vector2f BallObject::get_position(){
@@ -32,10 +33,6 @@
 
     sf::FloatRect BallObject::get_global_bounds(){
         return m_ball_object.getGlobalBounds();
-    }
-
-    intersection_points BallObject::get_intersection_points(){
-        return m_points;
     }
 
     sf::CircleShape BallObject::get_ball(){

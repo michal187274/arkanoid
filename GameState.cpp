@@ -16,13 +16,13 @@ void GameState::create_boxes(int rows, sf::Vector2f size){
 void GameState::create_ball(float radius){
     std::cout<<"createballlllllllll";
     m_ball.set_radius(radius);
-    m_ball.set_position(m_ball_position);
+    m_ball.set_position(ball_initial_position);
 }
 
 void GameState::create_board(sf::Vector2f size){
     std::cout<<"createboarddddddd";
     m_board.set_size(size);
-    m_board.set_position(m_board_position);
+    m_board.set_position(board_initial_position);
 }
 
 BallObject& GameState::get_ball_object(){
@@ -38,9 +38,7 @@ void GameState::draw(){
     window.draw(m_board.get_board());
     std::cout<<m_board.get_position().x<<m_board.get_position().y<<'\n';
     for(auto& v : vector_of_boxes){
-        if(!(v.get_was_hit())){
-            window.draw(v.get_box_object());
-        }
+        window.draw(v.get_box_object());
     }
 }
 
@@ -86,7 +84,7 @@ void GameState::ball_wall_collision(){
     else wall_collision = false;
 };
 
-void GameState::circle_board_collision(){
+void GameState::ball_board_collision(){
     if(m_board.get_global_bounds().intersects(m_ball.get_global_bounds())){
         m_board_move_step.y = -m_board_move_step.y;
     }
@@ -103,3 +101,39 @@ void GameState::handle_event(sf::Event ev){
 
 
 
+void GameState::ball_box_collision(){
+
+        sf::Vector2f ball_position = m_ball.get_position();
+        intersection_points ball_points = m_ball.get_intersection_points();
+        static bool intersects(false);
+
+    for(auto &box : vector_of_boxes){
+        if(box.get_global_bounds().intersects(m_ball.get_global_bounds()) && intersects == false){
+            
+            intersects = true;
+            //sf::Vector2f box_position = box.get_position();
+            
+            if((ball_points.left <= box.get_sides().right ||
+                ball_points.right >= box.get_sides().left) &&
+                m_ball.get_position().y <= box.get_sides().down &&
+                m_ball.get_position().y >= box.get_sides().up)
+                {
+                    box.set_position(sf::Vector2f(-80, -80));
+                    std::cout<<"xxxx"<<'\n';
+                    m_ball_move_step.x = -m_ball_move_step.x;
+                }
+
+            else if((ball_points.up <= box.get_sides().down ||
+                    ball_points.down >= box.get_sides().up) &&
+                    m_ball.get_position().x <= box.get_sides().right &&
+                    m_ball.get_position().x >= box.get_sides().left)
+                    {
+                        box.set_position(sf::Vector2f(-80, -80));
+                        std::cout<<"yyyy"<<'\n';
+                        std::cout<<"das"<<'\n';
+                        m_ball_move_step.y = -m_ball_move_step.y;
+                    }
+        }
+        else if(!box.get_global_bounds().intersects(m_ball.get_global_bounds()))  intersects = false;
+        }
+};

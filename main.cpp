@@ -3,12 +3,7 @@
 #include "GameState.h"
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
-
-    sf::Vector2f ball_move_step(-60,-80);
-    sf::Vector2f board_move_step(-60,0);
-    sf::Vector2f ball_initial_position(400,501);
-    sf::Vector2f board_initial_position(400,500);
-    GameState game(window, ball_initial_position, board_initial_position, ball_move_step, board_move_step);
+    GameState game(window);
 
 int main()
 {

@@ -25,14 +25,6 @@ void BoxObject::set_global_bounds(){
     global_bounds = box_object.getGlobalBounds();
 }
 
-void BoxObject::set_was_hit(bool hit){
-    was_hit = hit;
-}
-
-bool BoxObject::get_was_hit(){
-    return was_hit;
-}
-
 sf::Vector2f BoxObject::get_position(){
     return position;
 }
