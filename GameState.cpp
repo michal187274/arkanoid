@@ -1,8 +1,9 @@
 #include "GameState.h"
+#include <cmath>
 
-void GameState::create_boxes(int rows, sf::Vector2f size){
-    for(int j = 0; j<(rows*size.x); j+=size.x){
-        for(int i = 0; i<=window.getSize().x; i+=size.x){
+void GameState::create_boxes(int rows, sf::Vector2f box_size, sf::Vector2u window_size){
+    for(int j = 0; j<(rows*box_size.y); j+=box_size.y){
+        for(int i = 0; i<=window_size.x; i+=box_size.x){
             std::cout<<"createboxes"<<i<<" "<<j<<'\n';
             BoxObject box(box_size);
             box.set_position(sf::Vector2f(i,j));
@@ -11,32 +12,49 @@ void GameState::create_boxes(int rows, sf::Vector2f size){
             vector_of_boxes.push_back(box);
         }
     }
+    for (auto& box : vector_of_boxes){
+        std::cout<<"box bounds "<<box.get_global_bounds().left<<" "<<box.get_global_bounds().top<<'\n';
+    }
 }
 
 void GameState::create_ball(float radius){
     std::cout<<"createballlllllllll";
     m_ball.set_radius(radius);
     m_ball.set_position(ball_initial_position);
+    m_ball_move_step = initial_ball_move_step;
 }
 
 void GameState::create_board(sf::Vector2f size){
     std::cout<<"createboarddddddd";
     m_board.set_size(size);
     m_board.set_position(board_initial_position);
+    m_board_move_step = intial_board_move_step;
 }
+
+void GameState::start_game(sf::Vector2u window_size){
+    if (!m_game_was_started){
+        create_ball(ball_radius);
+        create_board(board_size);
+        create_boxes(boxes_rows, box_size, window_size);
+        m_game_was_started = true;
+    }
+}
+
+void GameState::stop_game(){
+    create_ball(ball_radius);
+    create_board(board_size);
+    m_ball_move_step = sf::Vector2f(0,0);
+    m_game_was_started = false;
+}
+
 
 BallObject& GameState::get_ball_object(){
     return m_ball;
 }
 
-void GameState::set_box_size(sf::Vector2f size){
-    box_size = size;
-}
-
-void GameState::draw(){
+void GameState::draw(sf::RenderWindow& window){
     window.draw(m_ball.get_ball());
     window.draw(m_board.get_board());
-    std::cout<<m_board.get_position().x<<m_board.get_position().y<<'\n';
     for(auto& v : vector_of_boxes){
         window.draw(v.get_box_object());
     }
@@ -52,7 +70,7 @@ void GameState::set_delta_time(float delta){
 }
 
 void GameState::move_ball(){
-    sf::Vector2f step = m_ball_move_step*m_delta_time;
+    sf::Vector2f step = m_ball_move_step*m_delta_time*ball_speed;
     m_ball.move(step);
 }
 
@@ -82,34 +100,41 @@ void GameState::ball_wall_collision(){
         }
     }
     else wall_collision = false;
-};
+}
 
 void GameState::ball_board_collision(){
     if(m_board.get_global_bounds().intersects(m_ball.get_global_bounds())){
-        m_board_move_step.y = -m_board_move_step.y;
+        m_ball_move_step.y = -m_ball_move_step.y;
+        std::cout<<"cosinus: "<<(cos(((m_board.get_position().x - m_ball.get_position().x))/m_board.get_board().getSize().x/2)*M_PI/6)<<'\n';
+        std::cout<<"move_step: "<<m_ball_move_step.x<<'\n';
+        if(m_ball.get_position().x > m_board.get_position().x)
+            m_ball_move_step.x += m_ball_move_step.x*(cos(((m_board.get_position().x - m_ball.get_position().x))/m_board.get_board().getSize().x/2)*M_PI/6);
+        else
+            m_ball_move_step.x -= m_ball_move_step.x*(cos(((m_board.get_position().x - m_ball.get_position().x))/m_board.get_board().getSize().x/2)*M_PI/6);
+        m_ball_move_step.x = m_ball_move_step.x/sqrt(m_ball_move_step.x*m_ball_move_step.x + m_ball_move_step.y*m_ball_move_step.y);
+        m_ball_move_step.y = m_ball_move_step.y/sqrt(m_ball_move_step.x*m_ball_move_step.x + m_ball_move_step.y*m_ball_move_step.y);
+        std::cout<<"new move_step: "<<m_ball_move_step.x<<'\n';
     }
 }
 
-void GameState::handle_event(sf::Event ev){
 
-    if (ev.type == sf::Event::Closed)
-        window.close();
-    
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) move_board(-m_board_move_step);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) move_board(m_board_move_step);
+
+bool GameState::handle_keyboard(){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) move_board(m_board_move_step);
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) move_board(-m_board_move_step);
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+        return true;
+    }
+    return false;
 }
 
-
-
 void GameState::ball_box_collision(){
-
-        sf::Vector2f ball_position = m_ball.get_position();
-        intersection_points ball_points = m_ball.get_intersection_points();
-        static bool intersects(false);
+    intersection_points ball_points = m_ball.get_intersection_points();
+    static bool intersects(false);
 
     for(auto &box : vector_of_boxes){
         if(box.get_global_bounds().intersects(m_ball.get_global_bounds()) && intersects == false){
-            
+            std::cout<<"boxCollision\n";
             intersects = true;
             //sf::Vector2f box_position = box.get_position();
             
@@ -135,5 +160,5 @@ void GameState::ball_box_collision(){
                     }
         }
         else if(!box.get_global_bounds().intersects(m_ball.get_global_bounds()))  intersects = false;
-        }
-};
+    }
+}

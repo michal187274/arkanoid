@@ -1,81 +1,60 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "GameState.h"
-
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
-    GameState game(window);
+#include "Menu.h"
 
 int main()
 {
+    sf::Vector2u window_size(800,600);
+    sf::RenderWindow window(sf::VideoMode(window_size.x, window_size.y), "My window");
+    GameState game;
     sf::Clock clock;
-    game.set_box_size(sf::Vector2f(80,40));
-    game.create_boxes(3, sf::Vector2f(80,40));
-    game.create_ball(10);
-    game.create_board(sf::Vector2f(80,4));
     window.setFramerateLimit(60);
+    Menu menu;
+    menu.create_menu();
+    bool game_started;
+    bool game_finished;
+    sf::Event event;
 
     while (window.isOpen())
     {
+        game_started = menu.game_start(window, game, window_size);
+        if(!game_started){
+            while(window.pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed){
+                    window.close();
+                    return 0;
+                }
+            }
+            continue;
+        }
+
         game.set_delta_time(clock.restart().asSeconds());
    
         game.get_ball_object().update_position();
-        sf::Event event;
-        game.handle_event(event);
+        
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        };
+        game_finished = game.handle_keyboard();
+        if(game_finished){
+            game.stop_game();
+            menu.set_game_stop();
+            continue;
+        }
         game.move_ball();
 
         window.clear(sf::Color::Black);        
 
         game.ball_wall_collision();
-        game.draw();
+        game.ball_board_collision();
+        game.ball_box_collision();
+        game.draw(window);
         window.display();
     }
 
     return 0;
 }
-/*to GameState
-bool circle_box_collision(BoxObject box){
-    float circle_x_intersection_point_right(0);
-    float circle_x_intersection_point_left(0);
-    float circle_y_intersection_point_up(0);
-    float circle_y_intersection_point_down(0);
-    //sf::Vector2f circle_position = circle.getPosition();
-
-    sf::Vector2f circle_position = game.get_ball_object().get_position();
-    float circle_radius = game.get_ball_object().get_radius();
-
-    static bool intersects(false);
-
-
-    if(box.get_global_bounds().intersects(game.get_ball_object().get_global_bounds()) && intersects == false){
-         
-        intersects = true;
-        //sf::Vector2f box_position = box.get_position();
-        sf::Vector2f move_step_circle = game.get_ball_object().get_move_step();
-
-        circle_x_intersection_point_right = circle_position.x + circle_radius;
-        circle_x_intersection_point_left = circle_position.x - circle_radius;
-        circle_y_intersection_point_up = circle_position.y - circle_radius;
-        circle_y_intersection_point_down = circle_position.y + circle_radius;
-
-        if((circle_x_intersection_point_left <= box.get_sides().right ||
-            circle_x_intersection_point_right >= box.get_sides().left) &&
-            circle_position.y <= box.get_sides().down &&
-            circle_position.y >= box.get_sides().up)
-            {
-                std::cout<<"xxxx"<<'\n';
-                move_step_circle.x = -move_step_circle.x;
-            }
-
-        else if((circle_y_intersection_point_up <= box.get_sides().down ||
-                circle_y_intersection_point_down >= box.get_sides().up) &&
-                circle_position.x <= box.get_sides().right &&
-                circle_position.x >= box.get_sides().left)
-                {
-                    std::cout<<"yyyy"<<'\n';
-                    std::cout<<"das"<<'\n';
-                    move_step_circle.y = -move_step_circle.y;
-                }
-    }
-    else if(!game.get_ball_object().get_global_bounds().intersects(box.get_global_bounds()))  intersects = false;
-    return intersects;
-};*/

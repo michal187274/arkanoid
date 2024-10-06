@@ -21,18 +21,15 @@ void BoxObject::set_outline(){
     box_object.setOutlineThickness(4);
 }
 
-void BoxObject::set_global_bounds(){
-    global_bounds = box_object.getGlobalBounds();
-}
-
 sf::Vector2f BoxObject::get_position(){
     return position;
 }
 
 sf::FloatRect BoxObject::get_global_bounds(){
-    return global_bounds;
+    return box_object.getGlobalBounds();
 }
 
 box_sides BoxObject::get_sides(){
+    calculate_sides();
     return sides;
 }

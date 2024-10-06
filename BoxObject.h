@@ -22,7 +22,6 @@ public:
     void set_position(sf::Vector2f position);
     void calculate_sides();
     void set_outline();
-    void set_global_bounds();
 
     sf::Vector2f get_position();
     sf::FloatRect get_global_bounds();

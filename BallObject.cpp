@@ -38,7 +38,3 @@
     sf::CircleShape BallObject::get_ball(){
         return m_ball_object;
     }
-
-    sf::Vector2f BallObject::get_move_step(){
-        return m_move_step;
-    }
