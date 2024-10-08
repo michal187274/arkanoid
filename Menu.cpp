@@ -23,19 +23,22 @@ void Menu::handle_keyboard(){
 
 }
 
-bool Menu::game_start(sf::RenderWindow& window, GameState& game, sf::Vector2u window_size){
+GameState* Menu::game_start(sf::RenderWindow& window, sf::Vector2u window_size){
     if(!m_game_start){
         draw(window);
         handle_keyboard();
-        return false;
+        return nullptr;
     }
     else{
-        game.start_game(window_size);
-        return true;
+        GameState *game = new GameState;
+        game->start_game(window_size);
+        return game;
     }
 }
 
-void Menu::set_game_stop(){
+void Menu::game_stop(GameState* game){
+    delete game;
+    game = nullptr;
     m_game_start = false;
 }
 

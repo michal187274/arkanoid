@@ -4,28 +4,21 @@
 void GameState::create_boxes(int rows, sf::Vector2f box_size, sf::Vector2u window_size){
     for(int j = 0; j<(rows*box_size.y); j+=box_size.y){
         for(int i = 0; i<=window_size.x; i+=box_size.x){
-            std::cout<<"createboxes"<<i<<" "<<j<<'\n';
             BoxObject box(box_size);
             box.set_position(sf::Vector2f(i,j));
             box.set_outline();
-            std::cout<<"positions "<<box.get_position().x<<" "<<box.get_position().y<<'\n';
             vector_of_boxes.push_back(box);
         }
-    }
-    for (auto& box : vector_of_boxes){
-        std::cout<<"box bounds "<<box.get_global_bounds().left<<" "<<box.get_global_bounds().top<<'\n';
     }
 }
 
 void GameState::create_ball(float radius){
-    std::cout<<"createballlllllllll";
     m_ball.set_radius(radius);
     m_ball.set_position(ball_initial_position);
     m_ball_move_step = initial_ball_move_step;
 }
 
 void GameState::create_board(sf::Vector2f size){
-    std::cout<<"createboarddddddd";
     m_board.set_size(size);
     m_board.set_position(board_initial_position);
     m_board_move_step = intial_board_move_step;
@@ -43,7 +36,6 @@ void GameState::start_game(sf::Vector2u window_size){
 void GameState::stop_game(){
     create_ball(ball_radius);
     create_board(board_size);
-    m_ball_move_step = sf::Vector2f(0,0);
     m_game_was_started = false;
 }
 
@@ -87,7 +79,6 @@ void GameState::ball_wall_collision(){
         m_ball.get_position().x - m_ball.get_radius() <= 0){
         if(!wall_collision){
             m_ball_move_step = sf::Vector2f(-(m_ball_move_step.x), m_ball_move_step.y);
-            std::cout<<"x collision"<<'\n';
             wall_collision = true;
         }
     }
@@ -95,7 +86,6 @@ void GameState::ball_wall_collision(){
             m_ball.get_position().y + m_ball.get_radius() >= 600){
             if(!wall_collision){
                 m_ball_move_step= sf::Vector2f(m_ball_move_step.x, -m_ball_move_step.y);
-                std::cout<<"y collision"<<'\n';
                 wall_collision = true;
         }
     }
@@ -128,6 +118,10 @@ bool GameState::handle_keyboard(){
     return false;
 }
 
+void GameState::update_ball_position(){
+    m_ball.update_position();
+}
+
 void GameState::ball_box_collision(){
     intersection_points ball_points = m_ball.get_intersection_points();
     static bool intersects(false);
@@ -155,7 +149,6 @@ void GameState::ball_box_collision(){
                     {
                         box.set_position(sf::Vector2f(-80, -80));
                         std::cout<<"yyyy"<<'\n';
-                        std::cout<<"das"<<'\n';
                         m_ball_move_step.y = -m_ball_move_step.y;
                     }
         }

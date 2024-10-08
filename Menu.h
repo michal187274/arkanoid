@@ -14,6 +14,6 @@ class Menu{
 
 public:
     void create_menu();
-    bool game_start(sf::RenderWindow&, GameState&, sf::Vector2u);
-    void set_game_stop();
+    GameState* game_start(sf::RenderWindow&, sf::Vector2u);
+    void game_stop(GameState*);
 };

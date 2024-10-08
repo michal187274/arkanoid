@@ -32,6 +32,8 @@ class GameState{
 
 
 public:
+    GameState() {std::cout<<"Game constr\n";};
+    ~GameState() {std::cout<<"Game destr\n";};
     void create_boxes(int, sf::Vector2f, sf::Vector2u);
     void create_ball(float);
     void create_board(sf::Vector2f);
@@ -49,6 +51,7 @@ public:
     void ball_board_collision();
     bool handle_keyboard();
     void ball_box_collision();
+    void update_ball_position();
 
     void draw(sf::RenderWindow&);
 };
